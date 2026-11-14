@@ -1,0 +1,12 @@
+packages:
+  darwin:
+    brews:
+    - 'git'
+    - 'gh'
+    - 'starship'
+    casks:
+    - 'font-jetbrains-mono-nerd-font'
+    - 'ghostty'
+    - 'google-chrome'
+    - 'claude'
+    - 'obsidian'

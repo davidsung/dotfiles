@@ -1,0 +1,3 @@
+command -v starship >/dev/null && eval "$(starship init zsh)"
+alias ll="ls -la"
+alias cz="chezmoi"

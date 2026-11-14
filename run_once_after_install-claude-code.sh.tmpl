@@ -1,0 +1,19 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/bash
+# Claude Code via the official native installer (self-updating).
+# Installs to ~/.local/bin/claude; ~/.local/bin is on PATH via ~/.zprofile.
+set -euo pipefail
+
+if [ -x "$HOME/.local/bin/claude" ]; then
+  exit 0
+fi
+
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Warn about other copies (e.g. Homebrew cask) that could conflict
+other="$(which -a claude 2>/dev/null | grep -vx "$HOME/.local/bin/claude" || true)"
+if [ -n "$other" ]; then
+  echo "Note: other Claude Code installs found, consider removing them:" >&2
+  echo "$other" >&2
+fi
+{{ end -}}

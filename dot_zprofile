@@ -1,0 +1,15 @@
+# Homebrew (Apple Silicon or Intel)
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv zsh)"
+fi
+
+# Bedrock bearer token from Keychain (only exported if present on this machine)
+if _token="$(security find-generic-password -a "$USER" -s "aws-bearer-token-bedrock" -w 2>/dev/null)"; then
+  export AWS_BEARER_TOKEN_BEDROCK="$_token"
+fi
+unset _token
+
+# User-local binaries (chezmoi, Claude Code native installer, etc.)
+export PATH="$HOME/.local/bin:$PATH"
