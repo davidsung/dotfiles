@@ -1,6 +1,20 @@
 command -v starship >/dev/null && eval "$(starship init zsh)"
-alias ll="ls -la"
+
+# Aliases: new names only. Keep ls/grep/find/cat standard, because Claude Code
+# loads these aliases into the shell it runs commands in.
 alias cz="chezmoi"
+if command -v eza >/dev/null; then
+  alias ll="eza -la --git"
+  alias lt="eza --tree --level=2 --git-ignore"
+else
+  alias ll="ls -la"
+fi
 
 # mise: full activation for interactive shells (replaces shims with real tool paths)
 command -v mise >/dev/null && eval "$(mise activate zsh)"
+
+# fzf: Ctrl-R history, Ctrl-T files, Alt-C cd
+command -v fzf >/dev/null && source <(fzf --zsh)
+
+# zoxide: `z <dir>` jumps to frequently used directories (keep last)
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"

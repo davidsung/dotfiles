@@ -1,13 +1,50 @@
 packages:
   darwin:
     brews:
-    - 'git'
-    - 'gh'
-    - 'starship'
-    - 'mise'
+      # --- Core ---
+      - 'git'         # version control
+      - 'gh'          # GitHub CLI
+      - 'mise'        # runtime version manager (node, python, ...)
+
+      # --- Shell & terminal ---
+      - 'starship'    # cross-shell prompt
+      - 'tmux'        # terminal multiplexer
+      - 'herdr'       # agent multiplexer for coding agents
+      - 'fzf'         # fuzzy finder (Ctrl-R history, Ctrl-T files)
+      - 'zoxide'      # smarter cd: `z <dir>`
+
+      # --- Search & navigation (fast, .gitignore-aware) ---
+      - 'ripgrep'     # rg: fast grep
+      - 'fd'          # fast find
+      - 'ast-grep'    # structural code search/rewrite
+      - 'eza'         # modern ls (git status, tree)
+      - 'bat'         # cat with syntax highlighting
+
+      # --- Data & text ---
+      - 'jq'          # JSON processor
+      - 'yq'          # YAML/TOML/XML processor
+      - 'sd'          # simpler find-and-replace than sed
+
+      # --- Git & code quality ---
+      - 'git-delta'   # syntax-highlighted git diffs
+      - 'shellcheck'  # shell script linter
+
+      # --- Dev utilities ---
+      - 'uv'          # fast Python package/project manager
+      - 'just'        # project command runner
+      - 'hyperfine'   # command benchmarking
+      - 'tokei'       # count lines of code
+      - 'dust'        # disk usage viewer
+
     casks:
-    - 'font-jetbrains-mono-nerd-font'
-    - 'ghostty'
-    - 'google-chrome'
-    - 'claude'
-    - 'obsidian'
+      # --- Editors & terminals ---
+      - 'visual-studio-code'
+      - 'zed'
+      - 'ghostty'
+      - 'font-jetbrains-mono-nerd-font'
+
+      # --- Apps ---
+      - 'claude'          # Claude desktop app
+      - 'google-chrome'
+      - 'obsidian'
+      - 'telegram'
