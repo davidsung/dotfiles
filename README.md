@@ -19,6 +19,12 @@ This installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 
 Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin` on PATH.
 
+### After bootstrap
+
+1. **1Password**: sign in, then enable *Settings → Developer → Use the SSH agent*.
+   `~/.ssh/config` points GitHub at it, and `git push` to GitHub goes over SSH.
+2. **GitHub CLI**: `gh auth login` (choose SSH), then check with `ssh -T git@github.com`.
+
 ## Day to day
 
 ```sh

@@ -11,3 +11,7 @@
 	navigate = true
 [merge]
 	conflictStyle = zdiff3
+
+# Push to GitHub over SSH (1Password SSH agent); fetch/clone stay on HTTPS
+[url "git@github.com:"]
+	pushInsteadOf = https://github.com/
