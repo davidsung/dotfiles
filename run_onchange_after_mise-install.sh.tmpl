@@ -1,0 +1,14 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/bash
+# Install tools listed in ~/.config/mise/config.toml.
+# Reruns when that file changes: {{ include "dot_config/mise/config.toml" | sha256sum }}
+set -euo pipefail
+
+eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv 2>/dev/null)" || true
+if ! command -v mise >/dev/null; then
+  echo "Note: mise not installed; skipping 'mise install'" >&2
+  exit 0
+fi
+
+mise install --yes
+{{ end -}}

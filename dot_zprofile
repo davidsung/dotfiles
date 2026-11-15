@@ -13,3 +13,6 @@ unset _token
 
 # User-local binaries (chezmoi, Claude Code native installer, etc.)
 export PATH="$HOME/.local/bin:$PATH"
+
+# mise shims: tools (node, etc.) for non-interactive use (editors, scripts, services)
+command -v mise >/dev/null && eval "$(mise activate zsh --shims)"

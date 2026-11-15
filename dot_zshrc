@@ -1,3 +1,6 @@
 command -v starship >/dev/null && eval "$(starship init zsh)"
 alias ll="ls -la"
 alias cz="chezmoi"
+
+# mise: full activation for interactive shells (replaces shims with real tool paths)
+command -v mise >/dev/null && eval "$(mise activate zsh)"

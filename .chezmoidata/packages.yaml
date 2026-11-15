@@ -4,6 +4,7 @@ packages:
     - 'git'
     - 'gh'
     - 'starship'
+    - 'mise'
     casks:
     - 'font-jetbrains-mono-nerd-font'
     - 'ghostty'
