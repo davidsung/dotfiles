@@ -51,13 +51,12 @@ packages:
 
   # Extra packages per machine profile (on top of the lists above)
   profiles:
-    personal:            # MacBook Pro
-      brews:
-        - 'tailscale'    # private network (not allowed on work machines)
+    personal: {}         # MacBook Pro: common packages only
     home:                # Mac mini
       taps:
         - 'openhue/cli'
       brews:
-        - 'tailscale'    # private network (not allowed on work machines)
         - 'openhue/cli/openhue-cli'  # Philips Hue control
+      casks:
+        - 'tailscale-app'  # private network, Standalone app (not allowed on work machines)
     work: {}             # work Mac laptop: common packages only

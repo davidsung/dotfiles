@@ -14,8 +14,8 @@ chezmoi asks one question, **Machine profile**, then remembers the answer on tha
 
 | Profile | Machine | Extras on top of the common packages |
 |---|---|---|
-| `personal` | MacBook Pro | Tailscale |
-| `home` | Mac mini (detected as the default) | Tailscale, openhue |
+| `personal` | MacBook Pro | None |
+| `home` | Mac mini (detected as the default) | Tailscale (Standalone app), openhue |
 | `work` | Work Mac laptop | None. Also asks for your work git email |
 | `game` | Windows | Chosen automatically (Windows support coming) |
 | `lab` | Linux | Chosen automatically (Linux support coming) |
@@ -38,7 +38,8 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
 
 1. **1Password**: sign in, then enable *Settings → Developer → Use the SSH agent*.
    `~/.ssh/config` points GitHub at it, and `git push` to GitHub goes over SSH.
-2. **Tailscale** (`personal` and `home`): `sudo brew services start tailscale`, then `tailscale up`.
+2. **Tailscale** (`home`): open the Tailscale app, allow its system extension in
+   System Settings when asked, then sign in.
 3. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
    upload an SSH key, say **No**: the key lives in 1Password and is already on
    GitHub. Then check with `ssh -T git@github.com` (approve the 1Password prompt).
