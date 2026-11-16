@@ -10,7 +10,20 @@ xcode-select --install   # git + build tools; wait for it to finish
 cd ~ && sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply davidsung
 ```
 
-This installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
+chezmoi asks one question, **Machine profile**, then remembers the answer on that machine:
+
+| Profile | Machine | Extras on top of the common packages |
+|---|---|---|
+| `personal` | MacBook Pro | Tailscale |
+| `home` | Mac mini (detected as the default) | Tailscale, openhue |
+| `work` | Work Mac laptop | None. Also asks for your work git email |
+| `game` | Windows | Chosen automatically (Windows support coming) |
+| `lab` | Linux | Chosen automatically (Linux support coming) |
+
+Change it later with `chezmoi init --prompt`; check it with `chezmoi data | jq .profile`.
+Switching profiles doesn't uninstall packages; remove those yourself.
+
+It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 
 1. **Hook**: installs Homebrew (asks for your password) and the 1Password app + CLI
 2. **Packages**: `brew bundle` from `.chezmoidata/packages.yaml`
@@ -25,7 +38,8 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
 
 1. **1Password**: sign in, then enable *Settings → Developer → Use the SSH agent*.
    `~/.ssh/config` points GitHub at it, and `git push` to GitHub goes over SSH.
-2. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
+2. **Tailscale** (`personal` and `home`): `sudo brew services start tailscale`, then `tailscale up`.
+3. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
    upload an SSH key, say **No**: the key lives in 1Password and is already on
    GitHub. Then check with `ssh -T git@github.com` (approve the 1Password prompt).
 
@@ -41,6 +55,8 @@ chezmoi upgrade         # update chezmoi itself (not managed by Homebrew)
 
 - **Homebrew packages**: add to `.chezmoidata/packages.yaml` (grouped by category,
   one-line reason each), then `chezmoi apply`; `brew bundle` reruns automatically.
+  Profile-only packages go under `profiles.<profile>`. Formulae from third-party taps
+  (`tap/name`) are trusted individually by the install script.
 - **Runtimes** (node, python, ...): `chezmoi edit ~/.config/mise/config.toml`, then
   `chezmoi apply`; `mise install` reruns automatically.
 - **Changed a managed file outside chezmoi** (e.g. `gh config set`): `chezmoi re-add`

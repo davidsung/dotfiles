@@ -1,3 +1,37 @@
+{{- /* Machine profile: asked once per machine, stored only in ~/.config/chezmoi/chezmoi.toml.
+       personal = MacBook Pro, home = Mac mini, work = work Mac laptop,
+       game = Windows, lab = Linux. */ -}}
+{{- $choices := list "personal" "home" "work" -}}
+{{- $default := "personal" -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $choices = list "game" -}}
+{{-   $default = "game" -}}
+{{- else if eq .chezmoi.os "linux" -}}
+{{-   $choices = list "lab" -}}
+{{-   $default = "lab" -}}
+{{- else if eq .chezmoi.os "darwin" -}}
+{{-   $model := output "system_profiler" "SPHardwareDataType" | regexFind "Model Name: .*" -}}
+{{-   if contains "Mac mini" $model -}}
+{{-     $default = "home" -}}
+{{-   end -}}
+{{- end -}}
+
+{{- $profile := "" -}}
+{{- if eq (len $choices) 1 -}}
+{{-   $profile = index $choices 0 -}}
+{{- else -}}
+{{-   $profile = promptChoiceOnce . "profile" "Machine profile" $choices $default -}}
+{{- end -}}
+
+{{- $email := "ddwsung@gmail.com" -}}
+{{- if eq $profile "work" -}}
+{{-   $email = promptStringOnce . "email" "Work git email" -}}
+{{- end -}}
+
+[data]
+    profile = {{ $profile | quote }}
+    email = {{ $email | quote }}
+
 {{ if ne .chezmoi.os "windows" -}}
 [hooks.read-source-state.pre]
     command = "{{ .chezmoi.sourceDir }}/.install-password-manager.sh"

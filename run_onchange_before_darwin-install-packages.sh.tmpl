@@ -1,16 +1,34 @@
 {{ if eq .chezmoi.os "darwin" -}}
+{{- $profile := dig "profiles" .profile dict .packages -}}
+{{- $taps := concat (dig "taps" list .packages.darwin) (dig "taps" list $profile) | uniq -}}
+{{- $brews := concat (dig "brews" list .packages.darwin) (dig "brews" list $profile) | uniq -}}
+{{- $casks := concat (dig "casks" list .packages.darwin) (dig "casks" list $profile) | uniq -}}
 #!/bin/bash
+# Profile: {{ .profile }}
 set -euo pipefail
 
 # chezmoi's environment may not have Homebrew on PATH yet (fresh machine)
 eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv 2>/dev/null)"
 command -v brew >/dev/null || { echo "brew not found; install Homebrew first" >&2; exit 1; }
 
+# Third-party taps: Homebrew only loads formulae it has been told to trust.
+# Trust just the formulae listed here (tap/name), not the whole tap.
+{{ range $taps -}}
+brew tap {{ . | quote }}
+{{ end -}}
+{{ range $brews -}}
+{{ if eq (len (splitList "/" .)) 3 -}}
+brew trust --formula {{ . | quote }}
+{{ end -}}
+{{ end }}
 brew bundle --file=/dev/stdin <<EOF
-{{ range .packages.darwin.brews -}}
+{{ range $taps -}}
+tap {{ . | quote }}
+{{ end -}}
+{{ range $brews -}}
 brew {{ . | quote }}
 {{ end -}}
-{{ range .packages.darwin.casks -}}
+{{ range $casks -}}
 cask {{ . | quote }}
 {{ end -}}
 EOF

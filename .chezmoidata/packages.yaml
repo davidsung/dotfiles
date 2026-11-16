@@ -48,3 +48,16 @@ packages:
       - 'google-chrome'
       - 'obsidian'
       - 'telegram'
+
+  # Extra packages per machine profile (on top of the lists above)
+  profiles:
+    personal:            # MacBook Pro
+      brews:
+        - 'tailscale'    # private network (not allowed on work machines)
+    home:                # Mac mini
+      taps:
+        - 'openhue/cli'
+      brews:
+        - 'tailscale'    # private network (not allowed on work machines)
+        - 'openhue/cli/openhue-cli'  # Philips Hue control
+    work: {}             # work Mac laptop: common packages only
