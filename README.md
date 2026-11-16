@@ -14,7 +14,7 @@ chezmoi asks one question, **Machine profile**, then remembers the answer on tha
 
 | Profile | Machine | Extras on top of the common packages |
 |---|---|---|
-| `personal` | MacBook Pro | None |
+| `personal` | MacBook Pro | Adobe Creative Cloud |
 | `home` | Mac mini (detected as the default) | Tailscale (Standalone app), openhue |
 | `work` | Work Mac laptop | None. Also asks for your work git email |
 | `game` | Windows | Chosen automatically (Windows support coming) |
@@ -43,6 +43,47 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
 3. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
    upload an SSH key, say **No**: the key lives in 1Password and is already on
    GitHub. Then check with `ssh -T git@github.com` (approve the 1Password prompt).
+
+### Existing machine: when chezmoi asks a new question
+
+If the repo adds a new setup question (like **Machine profile**), a plain
+`chezmoi update` fails with `map has no entry for key "..."`. Pull, answer, then apply:
+
+```sh
+chezmoi update --apply=false   # pull only
+chezmoi init                   # answer the new question(s)
+chezmoi apply
+```
+
+## Adobe Creative Cloud (`personal`)
+
+Homebrew installs only the **Creative Cloud app** (`adobe-creative-cloud`). The first
+install asks for your Mac password in the terminal, so run `chezmoi apply` in a real
+terminal window. Then:
+
+1. Open Creative Cloud and sign in. A personal plan allows signing in on **2 computers at a time**.
+2. Install Photoshop, Lightroom, Acrobat, etc. from inside Creative Cloud (not from Homebrew).
+3. Turn on auto-update in Creative Cloud's preferences. Creative Cloud updates itself;
+   `brew bundle` leaves it alone.
+
+### Removing Creative Cloud
+
+Order matters: the apps need Creative Cloud to uninstall them.
+
+1. **Uninstall each app** in Creative Cloud: *Apps → Installed → ⋯ → Uninstall* (Acrobat too).
+2. **Sign out** (*Account → Sign out*) to free one of your 2 sign-ins.
+3. **Stop chezmoi reinstalling it**: remove `adobe-creative-cloud` from
+   `profiles.personal.casks` in `.chezmoidata/packages.yaml`, commit and push.
+4. **Remove the Creative Cloud app** (asks for your password; stops Adobe's background services):
+   ```sh
+   brew uninstall --cask --zap adobe-creative-cloud   # --zap also removes preferences and caches
+   ```
+5. **Clean up leftovers**, if any Adobe folders or menu-bar items remain:
+   ```sh
+   brew install --cask adobe-creative-cloud-cleaner-tool
+   open -a "Adobe Creative Cloud Cleaner Tool"             # choose "Clean All"
+   brew uninstall --cask adobe-creative-cloud-cleaner-tool
+   ```
 
 ## Day to day
 

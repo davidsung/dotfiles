@@ -51,7 +51,9 @@ packages:
 
   # Extra packages per machine profile (on top of the lists above)
   profiles:
-    personal: {}         # MacBook Pro: common packages only
+    personal:            # MacBook Pro
+      casks:
+        - 'adobe-creative-cloud'  # Creative Cloud app; install Photoshop etc. from inside it
     home:                # Mac mini
       taps:
         - 'openhue/cli'
