@@ -1,0 +1,22 @@
+# Font & theme (follows macOS light/dark)
+font-family = JetBrainsMono Nerd Font
+font-size = 14
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+
+# Window
+window-padding-x = 10
+window-padding-y = 8
+window-padding-balance = true
+macos-titlebar-style = tabs
+background-opacity = 0.95
+background-blur = true
+
+# Behaviour
+macos-option-as-alt = true
+copy-on-select = clipboard
+mouse-hide-while-typing = true
+shell-integration-features = cursor,sudo,title
+
+# Quick terminal: a drop-down Ghostty from any app (Option+`; Cmd+` stays macOS window cycling)
+keybind = global:alt+grave_accent=toggle_quick_terminal
+quick-terminal-position = top

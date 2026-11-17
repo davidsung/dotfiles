@@ -28,7 +28,8 @@ It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 1. **Hook**: installs Homebrew (asks for your password) and the 1Password app + CLI
 2. **Packages**: `brew bundle` from `.chezmoidata/packages.yaml`
 3. **Dotfiles**: `.zshenv`, `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`,
-   `.config/gh/config.yml`, `.config/mise/config.toml`
+   `.config/gh/config.yml`, `.config/mise/config.toml`, `.config/ghostty/config`,
+   `.config/starship.toml`
 4. **Runtimes**: `mise install` (Node 24, from `~/.config/mise/config.toml`)
 5. **Claude Code**: native installer (self-updating)
 
@@ -40,7 +41,11 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
    `~/.ssh/config` points GitHub at it, and `git push` to GitHub goes over SSH.
 2. **Tailscale** (`home`): open the Tailscale app, allow its system extension in
    System Settings when asked, then sign in.
-3. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
+3. **Ghostty**: open it once; when macOS asks, allow Ghostty under *Privacy & Security →
+   Device Control and Data Access*, then quit (`Cmd+Q`) and reopen it. This enables the
+   quick terminal: **`Option+backtick`** drops Ghostty down from any app (`Cmd+backtick`
+   still cycles an app's windows).
+4. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
    upload an SSH key, say **No**: the key lives in 1Password and is already on
    GitHub. Then check with `ssh -T git@github.com` (approve the 1Password prompt).
 
@@ -101,5 +106,8 @@ chezmoi upgrade         # update chezmoi itself (not managed by Homebrew)
   (`tap/name`) are trusted individually by the install script.
 - **Runtimes** (node, python, ...): `chezmoi edit ~/.config/mise/config.toml`, then
   `chezmoi apply`; `mise install` reruns automatically.
+- **Prompt** (Starship, `catppuccin-powerline` preset): edit with `chezmoi edit ~/.config/starship.toml`;
+  changes show at the next prompt. Try another preset in one window only with
+  `starship preset <name> -o /tmp/s.toml && export STARSHIP_CONFIG=/tmp/s.toml`.
 - **Changed a managed file outside chezmoi** (e.g. `gh config set`): `chezmoi re-add`
   copies it back into the repo.
