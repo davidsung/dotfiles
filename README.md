@@ -30,7 +30,7 @@ It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 3. **Dotfiles**: `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`, `.config/zsh/secrets.zsh`,
    `.config/gh/config.yml`, `.config/mise/config.toml`, `.config/ghostty/config`,
    `.config/starship.toml`
-   Also creates `~/code`, the folder for git repos (e.g. `~/code/github.com/<owner>/<repo>`).
+   Also creates `~/Code`, the folder for git repos (e.g. `~/Code/github.com/<owner>/<repo>`).
 4. **Runtimes**: `mise install` (Node 24, from `~/.config/mise/config.toml`)
 5. **Claude Code**: native installer (self-updating)
 
