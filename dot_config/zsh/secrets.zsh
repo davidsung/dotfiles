@@ -41,7 +41,9 @@ secrets() {
       local -i ok=0 failed=0
       while read -r name var ref; do
         (( $# )) && [[ ${@[(Ie)$name]} -eq 0 ]] && continue
-        if value="$(op read "$ref" 2>/dev/null)" && [[ -n $value ]]; then
+        # OP_BIOMETRIC_UNLOCK_ENABLED: use the 1Password app integration even when macOS
+        # stops `op` from reading the app's settings file to detect it.
+        if value="$(OP_BIOMETRIC_UNLOCK_ENABLED=true op read "$ref" 2>/dev/null)" && [[ -n $value ]]; then
           _secrets_keychain_set "$name" "$value"
           [[ $var != "-" ]] && export "$var=$value"
           print "  ✓ $name"; (( ok++ ))
