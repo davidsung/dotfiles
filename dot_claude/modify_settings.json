@@ -1,0 +1,7 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Claude Code rewrites this file (/model, /effort, /config), so chezmoi only sets
+       the keys below and keeps everything else as Claude Code left it. */ -}}
+{{- $s := dict -}}
+{{- if .chezmoi.stdin }}{{ $s = fromJson .chezmoi.stdin }}{{ end -}}
+{{- $s = setValueAtPath "statusLine" (dict "type" "command" "command" "~/.claude/statusline.sh") $s -}}
+{{- toPrettyJson $s }}
