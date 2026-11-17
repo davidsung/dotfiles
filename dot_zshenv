@@ -1,2 +1,2 @@
-export CLAUDE_CODE_USE_BEDROCK=1
-export AWS_REGION=us-east-1
+# Intentionally empty. Private environment settings live in the dotfiles-private repo,
+# loaded from ~/.zprofile.

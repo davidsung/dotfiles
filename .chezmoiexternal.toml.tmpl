@@ -1,0 +1,9 @@
+{{- /* Private overlay repo: cloned only once 1Password's SSH agent is running, because
+       cloning it needs the GitHub SSH key stored in 1Password. */ -}}
+{{- $agent := joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" -}}
+{{- if and (eq .chezmoi.os "darwin") (stat $agent) }}
+[".config/dotfiles-private"]
+    type = "git-repo"
+    url = "git@github.com:davidsung/dotfiles-private.git"
+    refreshPeriod = "168h"
+{{- end }}

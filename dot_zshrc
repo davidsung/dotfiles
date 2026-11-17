@@ -10,6 +10,9 @@ else
   alias ll="ls -la"
 fi
 
+# `secrets` command in every interactive shell (exports happen once, in ~/.zprofile)
+[[ -r ~/.config/zsh/secrets.zsh ]] && source ~/.config/zsh/secrets.zsh
+
 # mise: full activation for interactive shells (replaces shims with real tool paths)
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 

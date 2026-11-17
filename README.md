@@ -27,7 +27,7 @@ It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 
 1. **Hook**: installs Homebrew (asks for your password) and the 1Password app + CLI
 2. **Packages**: `brew bundle` from `.chezmoidata/packages.yaml`
-3. **Dotfiles**: `.zshenv`, `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`,
+3. **Dotfiles**: `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`, `.config/zsh/secrets.zsh`,
    `.config/gh/config.yml`, `.config/mise/config.toml`, `.config/ghostty/config`,
    `.config/starship.toml`
 4. **Runtimes**: `mise install` (Node 24, from `~/.config/mise/config.toml`)
@@ -37,15 +37,22 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
 
 ### After bootstrap
 
-1. **1Password**: sign in, then enable *Settings → Developer → Use the SSH agent*.
-   `~/.ssh/config` points GitHub at it, and `git push` to GitHub goes over SSH.
-2. **Tailscale** (`home`): open the Tailscale app, allow its system extension in
+1. **1Password**: sign in, then in *Settings → Developer* enable **Use the SSH agent** and
+   **Integrate with 1Password CLI**. `~/.ssh/config` points GitHub at the agent, and
+   `git push` to GitHub goes over SSH.
+2. **Private settings**: run `chezmoi apply` again and approve the 1Password prompt. Now
+   that the SSH agent runs, chezmoi clones the private overlay repo into
+   `~/.config/dotfiles-private` (refreshed weekly; `chezmoi apply --refresh-externals` pulls now).
+3. **API keys**: open a new terminal, then `secrets sync` (approve 1Password once). This
+   copies the keys listed in the private repo from 1Password into this Mac's Keychain;
+   new terminals export the ones marked for export. `secrets list` shows what this Mac has.
+4. **Tailscale** (`home`): open the Tailscale app, allow its system extension in
    System Settings when asked, then sign in.
-3. **Ghostty**: open it once; when macOS asks, allow Ghostty under *Privacy & Security →
+5. **Ghostty**: open it once; when macOS asks, allow Ghostty under *Privacy & Security →
    Device Control and Data Access*, then quit (`Cmd+Q`) and reopen it. This enables the
    quick terminal: **`Option+backtick`** drops Ghostty down from any app (`Cmd+backtick`
    still cycles an app's windows).
-4. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
+6. **GitHub CLI**: `gh auth login` and choose **SSH**. When asked to generate or
    upload an SSH key, say **No**: the key lives in 1Password and is already on
    GitHub. Then check with `ssh -T git@github.com` (approve the 1Password prompt).
 
@@ -106,6 +113,10 @@ chezmoi upgrade         # update chezmoi itself (not managed by Homebrew)
   (`tap/name`) are trusted individually by the install script.
 - **Runtimes** (node, python, ...): `chezmoi edit ~/.config/mise/config.toml`, then
   `chezmoi apply`; `mise install` reruns automatically.
+- **API keys** (`secrets`): add a line to `secrets.conf` in `~/.config/dotfiles-private`
+  (`name  EXPORT_VAR|-  op://vault/item/field`), commit and push it, then `secrets sync <name>`
+  on each Mac. Use `-` for keys that shouldn't be in every shell, then run tools with
+  `FOO_API_KEY=$(secrets get foo) tool`. `secrets rm <name>` removes a key from this Mac.
 - **Prompt** (Starship, `catppuccin-powerline` preset): edit with `chezmoi edit ~/.config/starship.toml`;
   changes show at the next prompt. Try another preset in one window only with
   `starship preset <name> -o /tmp/s.toml && export STARSHIP_CONFIG=/tmp/s.toml`.

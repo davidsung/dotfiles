@@ -5,14 +5,17 @@ elif [ -x /usr/local/bin/brew ]; then
   eval "$(/usr/local/bin/brew shellenv zsh)"
 fi
 
-# Bedrock bearer token from Keychain (only exported if present on this machine)
-if _token="$(security find-generic-password -a "$USER" -s "aws-bearer-token-bedrock" -w 2>/dev/null)"; then
-  export AWS_BEARER_TOKEN_BEDROCK="$_token"
-fi
-unset _token
-
 # User-local binaries (chezmoi, Claude Code native installer, etc.)
 export PATH="$HOME/.local/bin:$PATH"
 
 # mise shims: tools (node, etc.) for non-interactive use (editors, scripts, services)
 command -v mise >/dev/null && eval "$(mise activate zsh --shims)"
+
+# API keys: `secrets` command; export the keys marked for export (from Keychain, silent)
+if [[ -r ~/.config/zsh/secrets.zsh ]]; then
+  source ~/.config/zsh/secrets.zsh
+  secrets export
+fi
+
+# Private settings (dotfiles-private repo, cloned by chezmoi once 1Password's SSH agent runs)
+[[ -r ~/.config/dotfiles-private/zsh/private.zsh ]] && source ~/.config/dotfiles-private/zsh/private.zsh
