@@ -13,8 +13,46 @@ fi
 # mise: full activation for interactive shells (replaces shims with real tool paths)
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 
+# --- Completion ---
+# Homebrew's completions (git, gh, brew, mise, rg, ...) are on fpath via `brew shellenv`.
+# ~/.local/share/zsh/site-functions holds generated ones (chezmoi).
+fpath=("$HOME/.local/share/zsh/site-functions" $fpath)
+autoload -Uz compinit
+# Rebuild the completion cache at most once a day; otherwise load it as-is (fast).
+() {
+  setopt local_options extended_glob
+  if [[ -n $HOME/.zcompdump(#qN.mh+24) || ! -e $HOME/.zcompdump ]]; then
+    compinit
+  else
+    compinit -C
+  fi
+}
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
+zstyle ':completion:*:descriptions' format '[%d]'           # group headers (fzf-tab shows them)
+zstyle ':completion:*' menu no                              # fzf-tab replaces the menu
+
+# Homebrew add-ons (installed via packages.yaml)
+_brew_share="${HOMEBREW_PREFIX:-/opt/homebrew}/share"
+
+# fzf-tab: Tab opens completions in fzf. Load after compinit, before widget wrappers.
+if [[ -r $_brew_share/fzf-tab/fzf-tab.zsh ]]; then
+  source "$_brew_share/fzf-tab/fzf-tab.zsh"
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+  zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza -1 --color=always $realpath'
+fi
+
 # fzf: Ctrl-R history, Ctrl-T files, Alt-C cd
 command -v fzf >/dev/null && source <(fzf --zsh)
 
-# zoxide: `z <dir>` jumps to frequently used directories (keep last)
+# zoxide: `z <dir>` jumps to frequently used directories
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+
+# zsh-autosuggestions: grey suggestion from history; → (right arrow) accepts
+[[ -r $_brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
+  source "$_brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# zsh-syntax-highlighting: must be sourced last
+[[ -r $_brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] &&
+  source "$_brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+unset _brew_share

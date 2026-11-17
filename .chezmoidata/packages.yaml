@@ -12,6 +12,9 @@ packages:
       - 'herdr'       # agent multiplexer for coding agents
       - 'fzf'         # fuzzy finder (Ctrl-R history, Ctrl-T files)
       - 'zoxide'      # smarter cd: `z <dir>`
+      - 'fzf-tab'                  # Tab completion menu in fzf
+      - 'zsh-autosuggestions'      # grey history suggestions (→ accepts)
+      - 'zsh-syntax-highlighting'  # colour commands as you type
 
       # --- Search & navigation (fast, .gitignore-aware) ---
       - 'ripgrep'     # rg: fast grep
