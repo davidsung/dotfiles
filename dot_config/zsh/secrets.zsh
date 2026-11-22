@@ -25,10 +25,19 @@ _secrets_keychain_get() {
   security find-generic-password -a "$USER" -s "${_SECRETS_SERVICE_PREFIX}$1" -w 2>/dev/null
 }
 
-# Write via `security -i` on stdin so the value never appears in the process list.
+# Write via `security -i` on stdin, not `-w <value>`: command-line arguments show up in
+# ps and in the process logs of endpoint security tools (EDR) on managed Macs.
+# `security -i` parses each line shell-style, so refuse names/values that could break out
+# of the quotes (" \ newline; non-ASCII also comes back from `-w` as hex), and read the
+# value back because `security -i` exits 0 even when the command fails.
 _secrets_keychain_set() {
+  local LC_ALL=C
+  [[ $1$2 =~ '^[ -~]+$' && $1$2 != *[\"\\]* ]] ||
+    { print -ru2 "  ✗ $1  (name or value has \", \\, a newline or non-ASCII)"; return 1; }
   printf 'add-generic-password -U -a "%s" -s "%s" -w "%s"\n' \
     "$USER" "${_SECRETS_SERVICE_PREFIX}$1" "$2" | security -i >/dev/null
+  [[ "$(_secrets_keychain_get "$1")" == "$2" ]] ||
+    { print -ru2 "  ✗ $1  (Keychain write failed)"; return 1; }
 }
 
 secrets() {
@@ -43,12 +52,13 @@ secrets() {
         (( $# )) && [[ ${@[(Ie)$name]} -eq 0 ]] && continue
         # OP_BIOMETRIC_UNLOCK_ENABLED: use the 1Password app integration even when macOS
         # stops `op` from reading the app's settings file to detect it.
-        if value="$(OP_BIOMETRIC_UNLOCK_ENABLED=true op read "$ref" 2>/dev/null)" && [[ -n $value ]]; then
-          _secrets_keychain_set "$name" "$value"
+        if ! value="$(OP_BIOMETRIC_UNLOCK_ENABLED=true op read "$ref" 2>/dev/null)" || [[ -z $value ]]; then
+          print -u2 "  ✗ $name  (could not read $ref)"; (( failed++ ))
+        elif _secrets_keychain_set "$name" "$value"; then
           [[ $var != "-" ]] && export "$var=$value"
           print "  ✓ $name"; (( ok++ ))
         else
-          print -u2 "  ✗ $name  (could not read $ref)"; (( failed++ ))
+          (( failed++ ))    # _secrets_keychain_set printed the reason
         fi
       done < <(_secrets_entries)
       unset value
