@@ -15,12 +15,3 @@ command -v mise >/dev/null && eval "$(mise activate zsh --shims)"
 # Without this, `op` may report "not signed in" because macOS blocks it from reading the
 # app's settings file. Not forced elsewhere (e.g. Linux with manual or service-account sign-in).
 [[ $OSTYPE == darwin* && -d /Applications/1Password.app ]] && export OP_BIOMETRIC_UNLOCK_ENABLED=true
-
-# API keys: `secrets` command; export the keys marked for export (from Keychain, silent)
-if [[ -r ~/.config/zsh/secrets.zsh ]]; then
-  source ~/.config/zsh/secrets.zsh
-  secrets export
-fi
-
-# Private settings (dotfiles-private repo, cloned by chezmoi once 1Password's SSH agent runs)
-[[ -r ~/.config/dotfiles-private/zsh/private.zsh ]] && source ~/.config/dotfiles-private/zsh/private.zsh

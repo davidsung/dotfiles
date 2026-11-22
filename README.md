@@ -27,7 +27,7 @@ It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 
 1. **Hook**: installs Homebrew (asks for your password) and the 1Password app + CLI
 2. **Packages**: `brew bundle` from `.chezmoidata/packages.yaml`
-3. **Dotfiles**: `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`, `.config/zsh/secrets.zsh`,
+3. **Dotfiles**: `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`,
    `.config/gh/config.yml`, `.config/mise/config.toml`, `.config/ghostty/config`,
    `.config/starship.toml`
    Also creates `~/Code`, the folder for git repos (e.g. `~/Code/github.com/<owner>/<repo>`).
@@ -44,9 +44,11 @@ Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin`
 2. **Private settings**: run `chezmoi apply` again and approve the 1Password prompt. Now
    that the SSH agent runs, chezmoi clones the private overlay repo into
    `~/.config/dotfiles-private` (refreshed weekly; `chezmoi apply --refresh-externals` pulls now).
-3. **API keys**: open a new terminal, then `secrets sync` (approve 1Password once). This
-   copies the keys listed in the private repo from 1Password into this Mac's Keychain;
-   new terminals export the ones marked for export. `secrets list` shows what this Mac has.
+3. **Claude Code**: open a new terminal and run `claude`. The `claude` wrapper from the
+   private repo reads the Bedrock API key with `op read` at each launch (approve Touch ID
+   when 1Password asks); the key is never exported to the shell or stored on this Mac.
+   Claude Code started any other way (`command claude`, VS Code, Zed) uses the default
+   Anthropic login instead: run `/login` there once.
 4. **Tailscale** (`home`): open the Tailscale app, allow its system extension in
    System Settings when asked, then sign in.
 5. **Ghostty**: open it once; when macOS asks, allow Ghostty under *Privacy & Security →
@@ -114,10 +116,9 @@ chezmoi upgrade         # update chezmoi itself (not managed by Homebrew)
   (`tap/name`) are trusted individually by the install script.
 - **Runtimes** (node, python, ...): `chezmoi edit ~/.config/mise/config.toml`, then
   `chezmoi apply`; `mise install` reruns automatically.
-- **API keys** (`secrets`): add a line to `secrets.conf` in `~/.config/dotfiles-private`
-  (`name  EXPORT_VAR|-  op://vault/item/field`), commit and push it, then `secrets sync <name>`
-  on each Mac. Use `-` for keys that shouldn't be in every shell, then run tools with
-  `FOO_API_KEY=$(secrets get foo) tool`. `secrets rm <name>` removes a key from this Mac.
+- **API keys**: keep them in 1Password and pass them only to the command that needs
+  them, e.g. `FOO_API_KEY=$(op read op://vault/item/field) tool`, or a wrapper function in
+  the private repo's `zsh/private.zsh` like `claude`. Don't export keys in shell startup files.
 - **Prompt** (Starship, `catppuccin-powerline` preset): edit with `chezmoi edit ~/.config/starship.toml`;
   changes show at the next prompt. Try another preset in one window only with
   `starship preset <name> -o /tmp/s.toml && export STARSHIP_CONFIG=/tmp/s.toml`.
