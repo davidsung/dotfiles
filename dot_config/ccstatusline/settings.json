@@ -4,41 +4,63 @@
     [
       {
         "id": "1",
-        "type": "model",
-        "color": "cyan"
+        "type": "model"
       },
       {
         "id": "2",
-        "type": "separator"
+        "type": "context-bar",
+        "metadata": {
+          "display": "slider"
+        }
       },
       {
         "id": "3",
-        "type": "context-length",
-        "color": "brightBlack"
+        "type": "git-branch",
+        "metadata": {
+          "hide": "no-git"
+        }
       },
       {
         "id": "4",
-        "type": "separator"
+        "type": "current-working-dir",
+        "metadata": {
+          "fishStyle": "true",
+          "abbreviateHome": "true"
+        }
       },
       {
         "id": "5",
-        "type": "git-branch",
-        "color": "magenta"
-      },
+        "type": "session-cost"
+      }
+    ],
+    [
       {
         "id": "6",
-        "type": "separator"
+        "type": "thinking-effort"
       },
       {
         "id": "7",
+        "type": "cache-hit-rate"
+      },
+      {
+        "id": "8",
         "type": "git-changes",
-        "color": "yellow"
+        "metadata": {
+          "hide": "no-git"
+        }
+      },
+      {
+        "id": "9",
+        "type": "session-clock"
+      },
+      {
+        "id": "10",
+        "type": "cache-timer"
       }
     ],
-    [],
     []
   ],
-  "colorLevel": 2,
+  "colorLevel": 3,
   "defaultPaddingSide": "both",
   "inheritSeparatorColors": false,
   "globalBold": false,
@@ -47,16 +69,22 @@
   "customCommandCacheTtlSeconds": 0,
   "minimalistMode": false,
   "powerline": {
-    "enabled": false,
+    "enabled": true,
     "separators": [
       ""
     ],
     "separatorInvertBackground": [
       false
     ],
-    "startCaps": [],
-    "endCaps": [],
-    "autoAlign": false,
-    "continueThemeAcrossLines": false
-  }
+    "startCaps": [
+      ""
+    ],
+    "endCaps": [
+      ""
+    ],
+    "autoAlign": true,
+    "continueThemeAcrossLines": false,
+    "theme": "tokyonight"
+  },
+  "defaultPadding": " "
 }
