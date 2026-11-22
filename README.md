@@ -29,9 +29,10 @@ It then installs chezmoi to `~/.local/bin`, clones this repo, and applies it:
 2. **Packages**: `brew bundle` from `.chezmoidata/packages.yaml`
 3. **Dotfiles**: `.zprofile`, `.zshrc`, `.gitconfig`, `.ssh/config`,
    `.config/gh/config.yml`, `.config/mise/config.toml`, `.config/ghostty/config`,
-   `.config/starship.toml`
+   `.config/starship.toml`, `.config/ccstatusline/settings.json`, and the `statusLine`
+   key in `.claude/settings.json` (Claude Code keeps managing the rest of that file)
    Also creates `~/Code`, the folder for git repos (e.g. `~/Code/github.com/<owner>/<repo>`).
-4. **Runtimes**: `mise install` (Node 24, from `~/.config/mise/config.toml`)
+4. **Runtimes**: `mise install` (Node 24 and the pinned ccstatusline, from `~/.config/mise/config.toml`)
 5. **Claude Code**: native installer (self-updating)
 
 Open a new terminal afterwards so `~/.zprofile` puts Homebrew and `~/.local/bin` on PATH.
@@ -119,6 +120,11 @@ chezmoi upgrade         # update chezmoi itself (not managed by Homebrew)
 - **API keys**: keep them in 1Password and pass them only to the command that needs
   them, e.g. `FOO_API_KEY=$(op read op://vault/item/field) tool`, or a wrapper function in
   the private repo's `zsh/private.zsh` like `claude`. Don't export keys in shell startup files.
+- **Claude Code status line** ([ccstatusline](https://github.com/sirmalloc/ccstatusline),
+  pinned in `~/.config/mise/config.toml`): run `ccstatusline` to edit the layout, then
+  `chezmoi re-add ~/.config/ccstatusline/settings.json`, commit and push. If its setup offers
+  to change Claude Code's status line command, decline (`chezmoi apply` resets it anyway).
+  Upgrade: read the release notes, bump the version, commit; `chezmoi update` on each Mac.
 - **Prompt** (Starship, `catppuccin-powerline` preset): edit with `chezmoi edit ~/.config/starship.toml`;
   changes show at the next prompt. Try another preset in one window only with
   `starship preset <name> -o /tmp/s.toml && export STARSHIP_CONFIG=/tmp/s.toml`.

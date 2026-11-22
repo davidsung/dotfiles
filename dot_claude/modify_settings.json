@@ -1,0 +1,13 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Claude Code rewrites this file (/model, /config, ...), so chezmoi only sets statusLine,
+       and leaves the file exactly as it is when statusLine is already right (Claude Code's
+       key order differs from chezmoi's, so rewriting it would show a diff every time).
+       Full shim path: Claude Code started from VS Code/Zed may not have mise on PATH. */ -}}
+{{- $want := dict "type" "command" "command" "~/.local/share/mise/shims/ccstatusline" "padding" 0 "refreshInterval" 10 -}}
+{{- $s := dict -}}
+{{- if .chezmoi.stdin }}{{ $s = fromJson .chezmoi.stdin }}{{ end -}}
+{{- if and (hasKey $s "statusLine") (eq (toJson $s.statusLine) (toJson $want)) -}}
+{{-   .chezmoi.stdin -}}
+{{- else -}}
+{{-   toPrettyJson (set $s "statusLine" $want) -}}
+{{- end -}}

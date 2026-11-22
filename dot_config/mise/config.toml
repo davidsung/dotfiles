@@ -1,2 +1,5 @@
 [tools]
 node = "24"
+# Claude Code status line. Pinned: upgrade deliberately (read the release notes first);
+# mise verifies the package's npm provenance on install.
+"npm:ccstatusline" = "2.2.34"
