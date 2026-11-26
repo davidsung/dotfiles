@@ -14,11 +14,8 @@
         }
       },
       {
-        "id": "3",
-        "type": "git-branch",
-        "metadata": {
-          "hide": "no-git"
-        }
+        "id": "7",
+        "type": "cache-hit-rate"
       },
       {
         "id": "4",
@@ -27,6 +24,10 @@
           "fishStyle": "true",
           "abbreviateHome": "true"
         }
+      },
+      {
+        "id": "12",
+        "type": "free-memory"
       },
       {
         "id": "5",
@@ -39,8 +40,20 @@
         "type": "thinking-effort"
       },
       {
-        "id": "7",
-        "type": "cache-hit-rate"
+        "id": "11",
+        "type": "output-speed",
+        "metadata": {
+          "windowSeconds": "60"
+        }
+      },
+      {
+        "id": "10",
+        "type": "cache-timer"
+      },
+      {
+        "id": "3",
+        "type": "git-branch",
+        "merge": true
       },
       {
         "id": "8",
@@ -50,12 +63,15 @@
         }
       },
       {
-        "id": "9",
-        "type": "session-clock"
+        "id": "15",
+        "type": "git-ahead-behind",
+        "metadata": {
+          "hide": ""
+        }
       },
       {
-        "id": "10",
-        "type": "cache-timer"
+        "id": "9",
+        "type": "session-clock"
       }
     ],
     []
